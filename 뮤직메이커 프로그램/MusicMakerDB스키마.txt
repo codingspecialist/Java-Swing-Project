@@ -1,0 +1,22 @@
+CREATE TABLE member (
+    id number primary key,
+    username varchar2(15),
+    password varchar2(15)
+);
+
+insert into member values (member_seq.nextval,'시현',1234);
+
+CREATE TABLE filename (
+    userfilename varchar2(35) primary key,
+    username varchar2(15) ,
+    filename varchar2(20),
+    track number,
+    madi number,
+    bpm number,
+    note varchar2(2000),
+    drumnote varchar2(2000)
+);
+/*샘플*/
+insert into filename VALUES('시현_third' , '시현', 'third', 3 , 4 , 120 ,
+'V0 I[Piano] C4q E4q G4q C5q G3q B3q D4q G4q A3q C4q E4q A4q E3q G3q B3q E4q   V1 I[Flute] E6w D6w C6w B5w ^ O..oO...O..oOO..@..S...S...S...S.@````````````````@...............+',
+'O..oO...O..oOO..@..S...S...S...S.@````````````````@...............+');

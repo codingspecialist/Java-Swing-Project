@@ -1,0 +1,15 @@
+ORACLE-XE 계정
+
+create user ca identified by 1234;
+grant dba, resource, connect to ca;
+grant create table to ca;
+
+
+ca 계정
+
+create table member{
+	username varchar2(20) primary key,
+	password varchar2(20) not null,
+	name	varchar2(10) not null}
+
+insert into member values('sui','123','경민');
