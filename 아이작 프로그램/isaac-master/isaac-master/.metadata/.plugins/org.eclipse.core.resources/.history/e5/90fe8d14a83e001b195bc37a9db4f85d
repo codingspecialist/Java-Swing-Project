@@ -1,0 +1,5 @@
+package objectSize;
+
+public interface ExplosionSize {
+
+}

@@ -1,0 +1,25 @@
+package map;
+
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import item.Item;
+import item.Key;
+import objectSize.BombSize;
+import objectSize.KeySize;
+
+public class Background {
+	private JLabel laBackground;
+	private Vector<Item> itemState;
+	
+	public Background(JFrame app) {
+		laBackground = new JLabel(new ImageIcon("images/structure/map.png"));
+		app.setContentPane(laBackground);
+		itemState = new Vector<Item>(); 
+		itemState.add(new Key(app, "item/key.png", "key", 10, 40, KeySize.WIDTH, KeySize.HEIGHT ));
+		itemState.add(new Key(app, "item/bomb.png", "key", 10, 40, BombSize.PICKWIDTH, BombSize.PICKHEIGHT ));
+	}
+}

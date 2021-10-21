@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+		<item value="com.ianbrandt.tools.m2e.mdp.feature:0.0.4.201409291703"/>
+		<item value="org.eclipse.buildship:3.1.4.v20200326-1743"/>
+		<item value="org.eclipse.egit.gitflow.feature:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.egit:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.emf.common:2.20.0.v20200822-0801"/>
+		<item value="org.eclipse.emf.ecore:2.23.0.v20200630-0516"/>
+		<item value="org.eclipse.epp.mpc:1.8.4.v20200709-0857"/>
+		<item value="org.eclipse.help:2.3.300.v20200902-1800"/>
+		<item value="org.eclipse.jdt:3.18.500.v20200902-1800"/>
+		<item value="org.eclipse.jgit.gpg.bc:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.jgit.http.apache:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.jgit.lfs:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.jgit.ssh.apache:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.jgit.ssh.jsch:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.jgit:5.9.0.202009080501-r"/>
+		<item value="org.eclipse.jst.common.fproj.enablement.jdt:3.13.1.v202007161535"/>
+		<item value="org.eclipse.jst.enterprise_ui.feature:3.19.0.v202007100056"/>
+		<item value="org.eclipse.justj.openjdk.hotspot.jre.full:15.0.0.v20201014-1246"/>
+		<item value="org.eclipse.m2e.feature:1.16.2.20200910-0936"/>
+		<item value="org.eclipse.m2e.logback.feature:1.16.0.20200318-1040"/>
+		<item value="org.eclipse.m2e.wtp.feature:1.4.4.20200220-1005"/>
+		<item value="org.eclipse.m2e.wtp.jaxrs.feature:1.4.4.20200220-1005"/>
+		<item value="org.eclipse.m2e.wtp.jsf.feature:1.4.4.20200220-1005"/>
+		<item value="org.eclipse.mylyn.wikitext.editors_feature:3.0.38.202008172112"/>
+		<item value="org.eclipse.pde:3.14.500.v20200902-1800"/>
+		<item value="org.eclipse.platform:4.17.0.v20200902-1800"/>
+		<item value="org.eclipse.rcp:4.17.0.v20200902-1800"/>
+		<item value="org.eclipse.tm.terminal.connector.ssh.feature:10.0.0.202008310315"/>
+		<item value="org.eclipse.tm.terminal.control.feature:10.0.0.202009071350"/>
+		<item value="org.eclipse.tm.terminal.feature:10.0.0.202008310002"/>
+		<item value="org.eclipse.tm.terminal.view.feature:10.0.0.202008310315"/>
+		<item value="org.eclipse.userstorage:1.2.0.v20191120-1614"/>
+		<item value="org.eclipse.wb.core.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.core.ui.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.doc.user.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.layout.group.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.rcp.SWT_AWT_support:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.rcp.doc.user.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.rcp.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.swing.doc.user.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.swing.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wb.swt.feature:1.9.4.202009181620"/>
+		<item value="org.eclipse.wst.common.fproj:3.7.3.v202007142017"/>
+		<item value="org.eclipse.wst.json_ui.feature:1.1.8.v202004230532"/>
+		<item value="org.eclipse.wst.web_ui.feature:3.19.0.v202008242027"/>
+		<item value="org.eclipse.wst.xml_ui.feature:3.19.0.v202008192217"/>
+		<item value="org.jboss.tools.m2e.wro4j.feature:1.1.0.201406251020"/>
+		<item value="org.jboss.tools.maven.apt.feature:1.5.2.201812241535"/>
+		<item value="org.sonatype.m2e.buildhelper.feature:0.15.0.201207090124"/>
+		<item value="org.sonatype.m2e.egit.feature:0.15.1.201806191431"/>
+		<item value="org.sonatype.m2e.mavenarchiver.feature:0.17.5.202002191804"/>
+	</list>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="583"/>
+		<item key="DIALOG_Y_ORIGIN" value="376"/>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+</section>

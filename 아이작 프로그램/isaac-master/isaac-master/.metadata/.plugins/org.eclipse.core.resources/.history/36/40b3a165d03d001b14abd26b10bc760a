@@ -1,0 +1,15 @@
+package item;
+
+import javax.swing.JFrame;
+
+import lombok.Data;
+
+@Data
+
+// 아이템 클래스
+
+public class Item {
+   private JFrame app;
+   private final static String GUBUN = "Item : ";
+   private int xItem, yItem;
+}

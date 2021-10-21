@@ -1,0 +1,6 @@
+package objectSize;
+
+public interface StoneSize {
+	int WIDTH = 32;
+	int HEIGHT = 29;
+}

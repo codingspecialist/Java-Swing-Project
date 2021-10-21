@@ -1,0 +1,169 @@
+package monster;
+
+import java.util.Vector;
+
+import javax.swing.JFrame;
+
+import SpriteSheet.SpriteSheet;
+import character.Isaac;
+import objectSize.Gap;
+import objectSize.IsaacSize;
+import objectSize.ViewDirect;
+import objectSize.WormSize;
+import structure.Rock;
+import structure.Structure;
+
+public class Worm extends Monster {
+	private final static String GUBUN = "Worm : ";
+
+	public Worm(JFrame app, Isaac isaac, Vector<Structure> Structures, String url, int imgWidth, int imgHeight) {
+		super(app, isaac, Structures, url, imgWidth, imgHeight);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(!isDead()) {
+					if(getLife() <= 0) {
+						setDead(true);
+						break;
+					}
+					moveDirectCheck();
+					collisionRock();
+					moveUp();
+					moveDown();
+					moveRight();
+					moveLeft();
+					moveMotion();
+					getSsMonster().drawObject(getXChar(), getYChar());
+					try {
+						Thread.sleep(30);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if(isAttacking() == false) {
+						attack();
+					}
+				}
+				if(isDead()) {
+					dead();
+				}
+			}
+		}).start();
+	}
+	
+	public void init() {
+		setSsMonster(new SpriteSheet(getUrl(), "monster", 0, 0, getImgWidth(), getImgHeight())); 
+	}
+	public void setting() {
+		setViewDirect(ViewDirect.RIGHT);
+		setXChar(180);
+		setYChar(130);
+		setXCenter(getXChar() + WormSize.WIDTH / 2); 
+		setYCenter(getYChar() + WormSize.HEIGHT / 2); 
+		setLife(20);
+		setAttackDamge(1);
+	}
+	public void batch() {
+		getSsMonster().drawObject(getXChar(), getYChar());
+		getApp().add(getSsMonster(), 0);
+	}
+	public void moveDirectCheck() {
+		// 오른쪽 
+		if(getXCenter() + WormSize.WIDTH / 2 < getIsaac().getXCenter() ) {
+			setRight(true);
+		} else {
+			setRight(false);
+		}
+		// 왼쪽
+		if(getXCenter() - WormSize.WIDTH / 2 > getIsaac().getXCenter()) {
+			setLeft(true);
+		} else {
+			setLeft(false);
+		}
+		// 아래쪽
+		if(getYCenter() + WormSize.HEIGHT < getIsaac().getYCenter()) {
+			setDown(true);
+		}else {
+			setDown(false);
+		}
+		// 위쪽
+		if(getYCenter() - WormSize.HEIGHT / 2 > getIsaac().getYCenter()) {
+			setUp(true);
+		}else {
+			setUp(false);
+		}
+	}
+	@Override
+	public void attack() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int xDistance, yDistance;
+				double distance;
+				switch (getViewDirect()) {
+					case ViewDirect.DOWN:
+						setAttacking(true);
+						xDistance = getIsaac().getXCenter() - getXCenter();
+						yDistance = getIsaac().getYCenter() - getYCenter();
+						distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+						System.out.println(distance);
+						if(distance < 53) {
+							attackMotion(ViewDirect.DOWN - 1);
+						}
+						break;	
+					case ViewDirect.LEFT:
+						setAttacking(true);
+						xDistance = getIsaac().getXCenter() - getXCenter();
+						yDistance = getIsaac().getYCenter() - getYCenter();
+						distance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+						System.out.println(distance);
+						if(distance < 35) {
+							attackMotion(ViewDirect.DOWN - 1);
+						}
+						break;
+					case ViewDirect.UP:
+						setAttacking(true);
+						xDistance = (getIsaac().getXChar()) - (getXChar());
+						yDistance = getYChar() - (getIsaac().getYChar() + IsaacSize.HEADHEIGHT);
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 25 && yDistance < 10) {
+							attackMotion(ViewDirect.UP - 1);
+						}
+						break;
+					case ViewDirect.RIGHT:
+						setAttacking(true);
+						xDistance = (getIsaac().getXChar() + 10) - (getXChar() + WormSize.WIDTH);
+						yDistance = getIsaac().getYChar() - getYChar();
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 10 && yDistance < 25) {
+							attackMotion(ViewDirect.RIGHT - 1);
+						}
+						break;
+				}
+				setAttacking(false);
+			} 
+			
+		}).start();
+	}
+	public void attackMotion(int direct) {
+		getSsMonster().setXPos((WormSize.WIDTH * direct) + (Gap.COLUMNGAP * direct));
+		getSsMonster().setYPos(WormSize.HEIGHT * 4 + Gap.ROWGAP * 4);
+		getSsMonster().drawObject(getXChar(), getYChar());
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		getSsMonster().setXPos(0);
+		getSsMonster().setYPos(WormSize.HEIGHT * direct + Gap.ROWGAP * direct);
+		getSsMonster().drawObject(getXChar(), getYChar());
+		getIsaac().setLife(getIsaac().getLife() - 1);	// 플레이어 생명력 1감소
+		getIsaac().reDrawLife();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+}

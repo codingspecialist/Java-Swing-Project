@@ -1,0 +1,341 @@
+package character;
+
+import java.util.Vector;
+
+import javax.swing.JFrame;
+
+import SpriteSheet.SpriteSheet;
+import lombok.Data;
+import objectSize.Gap;
+import objectSize.IsaacSize;
+import objectSize.StructureSize;
+import objectSize.ViewDirect;
+import objectSize.WormSize;
+import structure.Rock;
+
+@Data
+
+public class Worm extends Character {
+	
+	private Worm worm = this;
+	private final static String GUBUN = "Worm : ";
+	
+	private Isaac isaac;
+	private SpriteSheet ssBody;
+	private boolean moveStart = false;
+	private boolean isAttacking = false;
+
+	private Vector<Rock> rock;
+
+	public Worm(JFrame app, Isaac isaac, Vector<Rock> rock) {
+		super(app);
+		this.isaac = isaac;
+		init(rock);
+		setting();
+		batch();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(!isDead()) {
+					moveDirectCheck();
+					collisionRock();
+					moveUp();
+					moveDown();
+					moveRight();
+					moveLeft();
+					moveMotion();
+					ssBody.drawObject(getXChar(), getYChar());
+					try {
+						Thread.sleep(30);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if(isAttacking == false) {
+						attack();
+					}
+				}
+			}
+		}).start();
+	}
+	public void init(Vector<Rock> rock) {
+		ssBody = new SpriteSheet("monster/worm.png", "monster", 0, 0, WormSize.WIDTH, WormSize.HEIGHT);
+		this.rock = rock;
+	}
+	public void setting() {
+		setViewDirect(ViewDirect.RIGHT);
+		setXChar(180);
+		setYChar(130);	
+		setLife(8);
+		setAttackDamge(1);
+	}
+	public void batch() {
+		ssBody.drawObject(getXChar(), getYChar());
+		getApp().add(ssBody, 0);
+	}
+	public void moveDirectCheck() {
+		// 오른쪽 
+		if(getXChar() + WormSize.WIDTH < isaac.getXChar() + 15) {
+			setRight(true);
+		} else {
+			setRight(false);
+		}
+		// 왼쪽
+		if(getXChar() > isaac.getXChar() + IsaacSize.HEADWIDTH - 15) {
+			setLeft(true);
+		} else {
+			setLeft(false);
+		}
+		// 아래쪽
+		if(getYChar() + WormSize.HEIGHT < isaac.getYChar() + 15) {
+			setDown(true);
+		}else {
+			setDown(false);
+		}
+		// 위쪽
+		if(getYChar() > isaac.getYChar() + IsaacSize.HEADHEIGHT ) {
+			setUp(true);
+		}else {
+			setUp(false);
+		}
+			
+	}
+	public void collisionRock() {
+		for(int i = 0; i < rock.size(); i++) {
+			// 오른쪽으로 이동중일 때 
+			if(getXChar() + WormSize.WIDTH > rock.get(i).getXStructure() && getXChar() + WormSize.WIDTH < rock.get(i).getXStructure() + StructureSize.WIDTH 
+				&& getYChar() + WormSize.HEIGHT> rock.get(i).getYStructure() && getYChar() < rock.get(i).getYStructure() + StructureSize.HEIGHT) {
+				setRight(false);
+			}
+			// 왼쪽으로 이동중일때
+			if(getXChar() > rock.get(i).getXStructure() && getXChar()< rock.get(i).getXStructure() + StructureSize.WIDTH 
+				&& getYChar() + WormSize.HEIGHT > rock.get(i).getYStructure() && getYChar() < rock.get(i).getYStructure() + StructureSize.HEIGHT) {
+				setLeft(false);
+			}
+			// 아래쪽으로 이동중 일때
+			if(getXChar() + WormSize.WIDTH > rock.get(i).getXStructure() && getXChar()< rock.get(i).getXStructure() + StructureSize.WIDTH 
+				&& getYChar() + WormSize.HEIGHT > rock.get(i).getYStructure() && getYChar() < rock.get(i).getYStructure() + StructureSize.HEIGHT) {
+				setDown(false);
+			}
+			// 위쪽으로 이동중 일때
+			if(getXChar() + WormSize.WIDTH > rock.get(i).getXStructure() && getXChar()< rock.get(i).getXStructure() + StructureSize.WIDTH 
+				&& getYChar()  > rock.get(i).getYStructure() && getYChar() < rock.get(i).getYStructure() + StructureSize.HEIGHT) {
+				setUp(false);
+			}
+		}
+	}
+	@Override
+	public void moveRight() {
+		if(isRight()) {
+			setViewDirect(ViewDirect.RIGHT);
+			if(getXChar() + WormSize.WIDTH < isaac.getXChar() + 15) {
+				setXChar(getXChar() + 1);
+			}
+		}
+	}
+	@Override
+	public void moveLeft() {
+		if(isLeft()) {
+			setViewDirect(ViewDirect.LEFT);
+			if(getXChar() > isaac.getXChar() + IsaacSize.HEADWIDTH - 15) {
+				setXChar(getXChar() - 1);
+			}
+		}
+	}
+	@Override
+	public void moveUp() {
+		if(isUp()) {
+			setViewDirect(ViewDirect.UP);
+			setYChar(getYChar() - 1);
+		}
+	}
+	@Override
+	public void moveDown() {
+		if(isDown()) {
+			setViewDirect(ViewDirect.DOWN);
+			if(getYChar() + WormSize.HEIGHT < isaac.getYChar() + 15) {
+				setYChar(getYChar() + 1);
+			}
+		}
+	}
+	public void moveMotion() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int motion = 0;
+				if(moveStart == false) {
+					setMoveStart(true);
+					while(!isDead()) {
+						if(isRight() && getViewDirect() == ViewDirect.RIGHT) {
+							if(motion > 3)
+								motion = 0;
+							ssBody.setXPos((WormSize.WIDTH * motion) + (Gap.COLUMNGAP * motion));
+							if(getViewDirect() == ViewDirect.RIGHT) {
+								ssBody.setYPos(0);	// 몸 이미지 y좌표
+								ssBody.drawObject(getXChar(), getYChar());
+								motion += 1;
+							}
+						}
+						if(isLeft() && getViewDirect() == ViewDirect.LEFT) {
+							if(motion > 3)
+								motion = 0;
+							ssBody.setXPos((WormSize.WIDTH * motion) + (Gap.COLUMNGAP * motion));
+							if(getViewDirect() == ViewDirect.LEFT) {
+								ssBody.setYPos(WormSize.HEIGHT + Gap.ROWGAP);	// 몸 이미지 y좌표
+								ssBody.drawObject(getXChar(), getYChar());
+								motion += 1;
+							}
+						}
+						if(isUp() && getViewDirect() == ViewDirect.UP) {
+							if(motion > 3)
+								motion = 0;
+							ssBody.setXPos((WormSize.WIDTH * motion) + (Gap.COLUMNGAP * motion));
+							if(getViewDirect() == ViewDirect.UP) {
+								ssBody.setYPos(WormSize.HEIGHT * 2 + Gap.ROWGAP * 2);	// 몸 이미지 y좌표
+								ssBody.drawObject(getXChar(), getYChar());
+								motion += 1;
+							}
+						}
+						if(isDown() && getViewDirect() == ViewDirect.DOWN) {
+							if(motion > 3)
+								motion = 0;
+							ssBody.setXPos((WormSize.WIDTH * motion) + (Gap.COLUMNGAP * motion));
+							if(getViewDirect() == ViewDirect.DOWN) {
+								ssBody.setYPos(WormSize.HEIGHT * 2 + Gap.ROWGAP * 3 + WormSize.HEIGHT);	// 몸 이미지 y좌표
+								ssBody.drawObject(getXChar(), getYChar());
+								motion += 1;
+							}
+						}
+						try {
+							Thread.sleep(100);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+					}
+				}
+			}
+		}).start();
+	}
+	@Override
+	public void attack() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int xDistance, yDistance;
+				switch (getViewDirect()) {
+					case ViewDirect.UP:
+						setAttacking(true);
+						xDistance = (isaac.getXChar()) - (getXChar());
+						yDistance = getYChar() - (isaac.getYChar() + IsaacSize.HEADHEIGHT);
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 25 && yDistance < 10) {
+							ssBody.setXPos((WormSize.WIDTH * 3) + (Gap.COLUMNGAP * 3));
+							ssBody.setYPos(WormSize.HEIGHT * 4 + Gap.ROWGAP * 4);
+							ssBody.drawObject(getXChar(), getYChar());
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							ssBody.setXPos(0);
+							ssBody.setYPos(WormSize.HEIGHT * 2 + Gap.ROWGAP * 2);
+							ssBody.drawObject(getXChar(), getYChar());
+							isaac.setLife(isaac.getLife() - 1);
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						break;
+						
+					case ViewDirect.DOWN:
+						setAttacking(true);
+						xDistance = (isaac.getXChar()) - (getXChar());
+						yDistance = (getYChar() + WormSize.HEIGHT) - (isaac.getYChar() + 15);
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 25 && yDistance < 10) {
+							ssBody.setXPos((WormSize.WIDTH * 0) + (Gap.COLUMNGAP * 0));
+							ssBody.setYPos(WormSize.HEIGHT * 4 + Gap.ROWGAP * 4);
+							ssBody.drawObject(getXChar(), getYChar());
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							ssBody.setXPos(0);
+							ssBody.setYPos(WormSize.HEIGHT * 3 + Gap.ROWGAP * 3);
+							ssBody.drawObject(getXChar(), getYChar());
+							isaac.setLife(isaac.getLife() - 1);
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						break;
+					
+					case ViewDirect.LEFT:
+						setAttacking(true);
+						xDistance = (isaac.getXChar() + IsaacSize.HEADWIDTH - 10) - (getXChar());
+						yDistance = isaac.getYChar() - getYChar();
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 10 && yDistance < 30) {
+							ssBody.setXPos((WormSize.WIDTH * 2) + (Gap.COLUMNGAP * 2));
+							ssBody.setYPos(WormSize.HEIGHT * 4 + Gap.ROWGAP * 4);
+							ssBody.drawObject(getXChar(), getYChar());
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							ssBody.setXPos(0);
+							ssBody.setYPos(WormSize.HEIGHT + Gap.ROWGAP);
+							ssBody.drawObject(getXChar(), getYChar());
+							isaac.setLife(isaac.getLife() - 1);
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						break;
+					
+					case ViewDirect.RIGHT:
+						setAttacking(true);
+						xDistance = (isaac.getXChar() + 10) - (getXChar() + WormSize.WIDTH);
+						yDistance = isaac.getYChar() - getYChar();
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 10 && yDistance < 30) {
+							ssBody.setXPos((WormSize.WIDTH * 1) + (Gap.COLUMNGAP * 1));
+							ssBody.setYPos(WormSize.HEIGHT * 4 + Gap.ROWGAP * 4);
+							ssBody.drawObject(getXChar(), getYChar());
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							ssBody.setXPos(0);
+							ssBody.setYPos(WormSize.HEIGHT * 0 + Gap.ROWGAP * 0);
+							ssBody.drawObject(getXChar(), getYChar());
+							isaac.setLife(isaac.getLife() - 1);
+							try {
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						break;
+				}
+				setAttacking(false);
+			} 
+			
+		}).start();
+		
+	}
+}

@@ -1,0 +1,28 @@
+package item;
+
+import javax.swing.JFrame;
+
+import SpriteSheet.SpriteSheet;
+import lombok.Data;
+import objectSize.StructureSize;
+
+@Data
+
+// 아이템 클래스
+
+public class Item {
+   private JFrame app;
+   private final static String GUBUN = "Item : ";
+   private SpriteSheet ssItem;
+   private int xItem, yItem;
+   private boolean isDrop = true;
+   
+	public Item(JFrame app,String url, String gubun, int xItem, int yItem, int width, int height) {
+//		System.out.println(TAG + "만들어짐");
+		this.app = app;
+		this.ssItem = new SpriteSheet(url, gubun, 0, 0, width, height);
+		this.xItem = xItem;
+		this.yItem = yItem;
+	}
+	public void drawItem() {}
+}

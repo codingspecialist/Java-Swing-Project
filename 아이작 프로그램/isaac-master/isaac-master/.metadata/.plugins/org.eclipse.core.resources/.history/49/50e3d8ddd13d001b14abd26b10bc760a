@@ -1,0 +1,15 @@
+package item;
+
+import javax.swing.JFrame;
+
+
+public class Key extends Item {
+	private final static String TAG = "Key : ";
+	private Key Key = this;
+   
+	public Key(JFrame app, String url, String gubun, int xItem, int yItem, int width, int height, Key key) {
+		super(app, url, gubun, xItem, yItem, width, height);
+		Key = key;
+	}
+      
+}

@@ -1,0 +1,34 @@
+package item;
+
+import javax.swing.JFrame;
+
+import SpriteSheet.SpriteSheet;
+import objectSize.BombSize;
+import objectSize.HeartSize;
+import objectSize.KeySize;
+
+public class Key extends Item {
+   private final static String TAG = "Key : ";
+   private Key Key = this;
+   private SpriteSheet ssKey;
+   
+   public Key(JFrame app) {
+      System.out.println(TAG + "make Key");
+      setApp(app);
+      init();
+      setting();
+   }
+   
+   public void init() {
+      ssKey = new SpriteSheet("isaac/Key_list.png","key",0,0,KeySize.WIDTH,KeySize.HEIGHT);
+      System.out.println(TAG+"실행됨");
+   }
+   
+   public void setting() {
+      setXItem(795);
+      setYItem(115);
+      getApp().add(ssKey);
+      ssKey.drawObject(getXItem(), getYItem());
+   }
+      
+}

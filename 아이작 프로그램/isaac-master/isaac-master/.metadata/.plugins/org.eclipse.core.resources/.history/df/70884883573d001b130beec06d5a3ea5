@@ -1,0 +1,91 @@
+package monster;
+
+import java.util.Vector;
+
+import javax.swing.JFrame;
+
+import SpriteSheet.SpriteSheet;
+import bullet.BulletControl;
+import character.Isaac;
+import objectSize.Gap;
+import objectSize.StoneSize;
+import objectSize.ViewDirect;
+import structure.Rock;
+
+public class Stone extends Monster {
+
+	private Monster stone = this;
+	
+	public Stone(JFrame app, Isaac isaac, Vector<Rock> rock, String url, int imgWidth, int imgHeight) {
+		super(app, isaac, rock, url, imgWidth, imgHeight);
+		attack();
+	}
+
+	public void init() {
+		setSsMonster(new SpriteSheet(getUrl(), "monster", 0, 0, getImgWidth(), getImgHeight())); 
+	}
+	public void setting() {
+		setViewDirect(ViewDirect.DOWN);
+		setXChar(690);
+		setYChar(115);	
+		setLife(20);
+		setAttackDamge(1);
+		setBulletControl(new BulletControl(getApp(), getRock(), getIsaac(), null));
+	}
+	public void batch() {
+		getSsMonster().drawObject(getXChar(), getYChar());
+		getApp().add(getSsMonster(), 0);
+		
+	}
+	public void attack() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(!isDead()) {
+					if(getLife() == 0) {
+						setDead(true);
+						break;
+					}
+					boolean isAttack = false;
+					int rowCount = 0;
+					for(int i = 0; i < 8; i++) {
+						if(i % 4 == 0 && i > 0) {
+							rowCount += 1;
+						}
+						int x = StoneSize.WIDTH * (i % 4) + Gap.COLUMNGAP * (i % 4);
+						int y = StoneSize.HEIGHT * rowCount + Gap.ROWGAP * rowCount;
+						
+						getSsMonster().setXPos(x);
+						getSsMonster().setYPos(y);
+						getSsMonster().drawObject(getXChar(), getYChar());
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					isAttack = true;
+					if(isAttack) {
+						getBulletControl().addBullet("monster", getAttackDamge(), getViewDirect(), getXChar(), getYChar());
+						getSsMonster().setXPos(0);
+						getSsMonster().setYPos(0);
+						getSsMonster().drawObject(getXChar(), getYChar());
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				if(isDead()) {
+					dead();
+				}
+			}
+		}).start();
+	}
+	public void attackMotion() {
+		
+	}
+}

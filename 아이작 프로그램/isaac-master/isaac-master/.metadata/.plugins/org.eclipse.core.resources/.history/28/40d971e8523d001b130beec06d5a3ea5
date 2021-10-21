@@ -1,0 +1,140 @@
+package monster;
+
+import java.util.Vector;
+
+import javax.swing.JFrame;
+
+import SpriteSheet.SpriteSheet;
+import character.Isaac;
+import objectSize.Gap;
+import objectSize.IsaacSize;
+import objectSize.ViewDirect;
+import objectSize.WormSize;
+import structure.Rock;
+
+public class Worm extends Monster {
+	private final static String GUBUN = "Worm : ";
+
+	public Worm(JFrame app, Isaac isaac, Vector<Rock> rock, String url, int imgWidth, int imgHeight) {
+		super(app, isaac, rock, url, imgWidth, imgHeight);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(!isDead()) {
+					if(getLife() == 0) {
+						setDead(true);
+						break;
+					}
+					moveDirectCheck();
+					collisionRock();
+					moveUp();
+					moveDown();
+					moveRight();
+					moveLeft();
+					moveMotion();
+					getMonster().drawObject(getXChar(), getYChar());
+					isDeadCheck();
+					try {
+						Thread.sleep(30);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if(isAttacking() == false) {
+						attack();
+					}
+				}
+				if(isDead()) {
+					dead();
+				}
+			}
+		}).start();
+	}
+	
+	public void init() {
+		getSsMonster(new SpriteSheet(getUrl(), "monster", 0, 0, getImgWidth(), getImgHeight())); 
+	}
+	public void setting() {
+		setViewDirect(ViewDirect.RIGHT);
+		setXChar(180);
+		setYChar(130);	
+		setLife(20);
+		setAttackDamge(1);
+	}
+	public void batch() {
+		getSsMonster().drawObject(getXChar(), getYChar());
+		getApp().add(getSsMonster(), 0);
+	}
+	@Override
+	public void attack() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int xDistance, yDistance;
+				switch (getViewDirect()) {
+					case ViewDirect.DOWN:
+						setAttacking(true);
+						xDistance = (getIsaac().getXChar()) - (getXChar());
+						yDistance = (getYChar() + WormSize.HEIGHT) - (getIsaac().getYChar() + 15);
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 25 && yDistance < 10) {
+							attackMotion(ViewDirect.DOWN - 1);
+						}
+						break;	
+					case ViewDirect.LEFT:
+						setAttacking(true);
+						xDistance = (getIsaac().getXChar() + IsaacSize.HEADWIDTH - 10) - (getXChar());
+						yDistance = getIsaac().getYChar() - getYChar();
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 10 && yDistance < 25) {
+							attackMotion(ViewDirect.LEFT - 1);
+						}
+						break;
+					case ViewDirect.UP:
+						setAttacking(true);
+						xDistance = (getIsaac().getXChar()) - (getXChar());
+						yDistance = getYChar() - (getIsaac().getYChar() + IsaacSize.HEADHEIGHT);
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 25 && yDistance < 10) {
+							attackMotion(ViewDirect.UP - 1);
+						}
+						break;
+					case ViewDirect.RIGHT:
+						setAttacking(true);
+						xDistance = (getIsaac().getXChar() + 10) - (getXChar() + WormSize.WIDTH);
+						yDistance = getIsaac().getYChar() - getYChar();
+						xDistance = xDistance < 0 ? xDistance * -1 : xDistance;
+						yDistance = yDistance < 0 ? yDistance * -1 : yDistance;
+						if(xDistance < 10 && yDistance < 25) {
+							attackMotion(ViewDirect.RIGHT - 1);
+						}
+						break;
+				}
+				setAttacking(false);
+			} 
+			
+		}).start();
+	}
+	public void attackMotion(int direct) {
+		getMonster().setXPos((WormSize.WIDTH * direct) + (Gap.COLUMNGAP * direct));
+		getMonster().setYPos(WormSize.HEIGHT * 4 + Gap.ROWGAP * 4);
+		getMonster().drawObject(getXChar(), getYChar());
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		getMonster().setXPos(0);
+		getMonster().setYPos(WormSize.HEIGHT * direct + Gap.ROWGAP * direct);
+		getMonster().drawObject(getXChar(), getYChar());
+		getIsaac().setLife(getIsaac().getLife() - 1);	// 플레이어 생명력 1감소
+		getIsaac().reDrawLife();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+}
